@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
     void Move()
     {
         //rb.AddForce(playerInput * Time.deltaTime);
-        rb.velocity = playerInput * Time.deltaTime;
+        rb.velocity = playerInput;
     }
 
     void GetInput()
