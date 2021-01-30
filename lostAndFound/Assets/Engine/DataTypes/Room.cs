@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 namespace Engine.DataTypes
@@ -61,6 +63,31 @@ namespace Engine.DataTypes
                         Layout[x, y] = new Tile(TileType.Floor, x, y);
                 }
             }
+
+            for (int i = 0; i < neighbors.Length; i++)
+            {
+                if (HasNeighborTo((Door)i))
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            Layout[0, size / 2] = new Tile(TileType.Door, 0, size / 2);
+                            break;
+                        case 2:
+                            Layout[size-1, size / 2] =
+                                new Tile(TileType.Door, size-1, size / 2);
+                            break;
+                        case 3:
+                            Layout[size / 2, 0] = new Tile(TileType.Door, size / 2, 0);
+                            break;
+                        case 4:
+                            Layout[size / 2, size-1] =
+                                new Tile(TileType.Door, size / 2, size-1);
+                            break;
+
+                    }
+                }
+            }
         }
 
         //This is all of the mapping construction of a room.
@@ -71,6 +98,9 @@ namespace Engine.DataTypes
         /// <param name="door">What door is being used to get to this room</param>
         public Room(int id, Vector2 pos, Room parent, Door door, bool isEnd = false)
         {
+            if(parent == null)
+                Debug.LogWarning("Parent is Null");
+
             this.IsEnd = isEnd;
 
             Id = id;
@@ -114,7 +144,7 @@ namespace Engine.DataTypes
         /// <param name="door">Door used to get to new room</param>
         public Room CreateNeighborRoom(int id, Vector2 pos, Door door, bool end = false)
         {
-            if (activated == false)
+            if (activated == false && neighbors[(int)door] == null)
             {
                 neighbors[(int)door] = new Room(id, pos, this, door, end);
             }

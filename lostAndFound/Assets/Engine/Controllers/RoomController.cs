@@ -8,7 +8,17 @@ namespace Engine.Controllers
 {
     public class RoomController : MonoBehaviour
     {
-        public Room CurrentRoom { get; private set; }
+        private Room _crrRoom;
+        public Room CurrentRoom
+        {
+            get { return _crrRoom; }
+            private set
+            {
+                Debug.Log("Current Room has Changed to: " + value.Id + ", Last room was: " + _crrRoom?.Id);
+                CurrentRoomChanged(_crrRoom, value);
+                _crrRoom = value;
+            }
+        }
         public Room[] Rooms { get; private set; }
 
         public GameObject roomParent;
@@ -25,33 +35,9 @@ namespace Engine.Controllers
         {
             roomsGO = new Dictionary<int, GameObject>();
             Rooms = CreateRooms(GameManger.NumRooms);
-            var lastPos = Vector2.zero;
-            //AssignNeighbors(Rooms);
-
-            int y = 0;
-            int numLeft = 0;
-            while (numLeft < Rooms.Length)
-            {
-                
-                for (int i = 0; i < GameManger.ROOM_SIZE; i++)
-                {
-                    if (numLeft >= Rooms.Length)
-                        break;
-
-                    var pos = MapController.GetRoomsOffset(Rooms[numLeft]);
-                    Debug.LogError("Last Pos: " + lastPos + ", Offest: " + pos + ", New Pos: " + (pos + lastPos));
-                    pos = pos + lastPos;
-                    var rmGo = Instantiate(roomParent, transform);
-
-                    rmGo.transform.position = pos;
-                    roomsGO.Add(Rooms[numLeft].Id, rmGo);
-                    lastPos = pos;
-                    numLeft++;
-                }
-                y++;
-            }
 
             CurrentRoom = Rooms[0];
+            DisplayRoom(CurrentRoom);
         }
 
 
@@ -80,15 +66,30 @@ namespace Engine.Controllers
                     UpdateCurrRoom(r);
             }
         }
+
+
+        /// <param name="lrm">Last Room</param>
+        private void CurrentRoomChanged(Room lrm, Room nrm)
+        {
+            
+            //Debug.Log("Current Room has Changed to: " + CurrentRoom.Id);
+            if (lrm != null)
+            {
+                Debug.Log("Current Room has Changed to: " + nrm.Id + ", Last room was: " + lrm.Id);
+                roomsGO[lrm.Id].SetActive(false);
+            }
+
+            if (nrm != null && roomsGO.ContainsKey(nrm.Id) == false)
+            {
+                DisplayRoom(nrm);
+            }else if (nrm != null)
+            {
+                roomsGO[nrm.Id].SetActive(true);
+            }
+        }
+
         private void UpdateCurrRoom(Room room)
         {
-            Debug.Log("UpdateCurrRoom");
-            
-            var go = roomsGO[CurrentRoom.Id];
-            go.GetComponent<SpriteRenderer>().color = Color.black;
-
-            go = roomsGO[room.Id];
-            go.GetComponent<SpriteRenderer>().color = Color.gray;
             CurrentRoom = room;
         }
 
@@ -129,6 +130,7 @@ namespace Engine.Controllers
         {
             Room.Door lastDoor = Room.Door.Right;
             List<Room> rms = new List<Room>();
+            Room room = CurrentRoom;
             for (int i = 0; i < numRooms; i++)
             {
                 Room.Door newDoor = lastDoor;
@@ -137,16 +139,19 @@ namespace Engine.Controllers
                     newDoor = GetRandomDoor();
                 }
 
-                if (CurrentRoom == null)
+                if (room == null)
                 {
-                    CurrentRoom = new Room(0, Vector2.zero, null, Room.Door.Left);
-                    rms.Add(CurrentRoom);
+                    Debug.Log("First Room");
+                    room = new Room(0, Vector2.zero, null, Room.Door.Left);
+                    rms.Add(room);
                 }
                 else
                 {
-                    rms.Add(CurrentRoom.CreateNeighborRoom(i, Vector2.zero, newDoor, i == numRooms));
-                    CurrentRoom = rms[i];
+                    rms.Add(room.CreateNeighborRoom(i, Vector2.zero, newDoor, i == numRooms));
+                    room = rms[i];
                 }
+
+                lastDoor = Room.GetOppDoor(newDoor);
             }
 
             return rms.ToArray();
@@ -172,13 +177,15 @@ namespace Engine.Controllers
         {
             if (!rm.IsActived())
             {
-                rm.Activate(17);
+                rm.Activate(GameManger.ROOM_SIZE);
             }
 
             if (roomsGO.ContainsKey(rm.Id))
                 throw new Exception("GameObject already is tied to this Rooms id: " + rm.Id);
 
             var rmGO = Instantiate(roomParent, this.transform);
+            rmGO.name = "Room: " + rm.Id;
+            roomsGO.Add(rm.Id,rmGO);
 
             foreach (var tile in rm.Layout)
             {
