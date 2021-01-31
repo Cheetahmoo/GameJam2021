@@ -56,5 +56,10 @@ public class BulletMovement : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
+        else
+        {
+            Debug.Log(collision.gameObject);
+            Destroy(this.gameObject);
+        }
     }
 }
