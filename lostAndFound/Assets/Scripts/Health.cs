@@ -11,13 +11,13 @@ public class Health : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(hasInitialized && health <= 0)
+        if (hasInitialized && health <= 0)
         {
             Kill();
         }
@@ -31,11 +31,21 @@ public class Health : MonoBehaviour
 
     public bool TakeDamage(int d, bool canHurtPlayer = true)
     {
-        if ((canHurtPlayer && isPlayer) || !isPlayer)
+        if (canHurtPlayer == isPlayer)
         {
             health -= d;
+            if (!isPlayer)
+            {
+                EnemyMovement em = GetComponent<EnemyMovement>();
+                if (em)
+                {
+                    em.PlayerActivate();
+                }
+                
+            }
+            return damagedReturn;
         }
-        return damagedReturn;
+        return !damagedReturn;
     }
 
     public void Kill()
