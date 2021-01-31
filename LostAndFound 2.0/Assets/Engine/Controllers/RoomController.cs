@@ -8,6 +8,9 @@ namespace Engine.Controllers
 {
     public class RoomController : MonoBehaviour
     {
+        private Action<Room> onRoomsCreatedCallback;
+        private Action<Room, Room> onRoomsChangedCallback;
+
         private Room _crrRoom;
         public Room CurrentRoom
         {
@@ -15,7 +18,7 @@ namespace Engine.Controllers
             private set
             {
                 Debug.Log("Current Room has Changed to: " + value.Id + ", Last room was: " + _crrRoom?.Id);
-                CurrentRoomChanged(_crrRoom, value);
+                onRoomsChangedCallback(_crrRoom, value);
                 _crrRoom = value;
             }
         }
@@ -27,19 +30,29 @@ namespace Engine.Controllers
         public GameObject[] tilePrefs;
 
         private Dictionary<int, GameObject> roomsGO;
-        
+
         //Controllers
         public EnemyController EC;
 
         private void Start()
         {
             roomsGO = new Dictionary<int, GameObject>();
-            Rooms = CreateRooms(GameManger.NumRooms);
 
-            _crrRoom = Rooms[0];
-            //DisplayRoom(CurrentRoom);
+            GameManger.RegisterOnStart(OnStart, 1);
+            onRoomsChangedCallback += CurrentRoomChanged;
         }
 
+        private void OnStart()
+        {
+            Rooms = CreateRooms(GameManger.NumRooms);
+            AssignNeighbors(Rooms);
+            SetRoomPositions(Rooms);
+            //TODO add room connections
+
+            _crrRoom = Rooms[0];
+            onRoomsCreatedCallback.Invoke(CurrentRoom);
+            DisplayRoom(CurrentRoom);
+        }
 
         void Update()
         {
@@ -48,12 +61,14 @@ namespace Engine.Controllers
                 var r = CurrentRoom.GetNeighbor(Room.Door.Up);
                 if (r != null)
                     UpdateCurrRoom(r);
-            }else if (Input.GetKeyUp("s"))
+            }
+            else if (Input.GetKeyUp("s"))
             {
                 var r = CurrentRoom.GetNeighbor(Room.Door.Down);
                 if (r != null)
                     UpdateCurrRoom(r);
-            }else if (Input.GetKeyUp("a"))
+            }
+            else if (Input.GetKeyUp("a"))
             {
                 var r = CurrentRoom.GetNeighbor(Room.Door.Left);
                 if (r != null)
@@ -73,7 +88,7 @@ namespace Engine.Controllers
         {
 
             //Debug.Log("Current Room has Changed to: " + CurrentRoom.Id);
-            if (lrm != null && roomsGO.ContainsKey(lrm.Id)) 
+            if (lrm != null && roomsGO.ContainsKey(lrm.Id))
             {
                 roomsGO[lrm.Id].SetActive(false);
             }
@@ -81,7 +96,8 @@ namespace Engine.Controllers
             if (nrm != null && roomsGO.ContainsKey(nrm.Id) == false)
             {
                 DisplayRoom(nrm);
-            }else if (nrm != null)
+            }
+            else if (nrm != null)
             {
                 roomsGO[nrm.Id].SetActive(true);
             }
@@ -95,17 +111,17 @@ namespace Engine.Controllers
 
         private void AssignNeighbors(Room[] rms)
         {
-            
+
             for (int i = 0; i < rms.Length; i++)
             {
                 int neighIndex = -1;
                 while (neighIndex <= 0 || neighIndex >= rms.Length)
                 {
-                    neighIndex = Random.Range(-GameManger.NEIGHBOR_MAX_DISTATNCE, GameManger.NEIGHBOR_MAX_DISTATNCE)+i;
+                    neighIndex = Random.Range((int)-GameManger.NEIGHBOR_MAX_DISTANCE, (int)GameManger.NEIGHBOR_MAX_DISTANCE) + i;
                 }
 
                 Room.Door door = GetRandomDoor();
-                
+
                 //Loop until a free door is found on rms[i] and the opposit door is oppen on the new neighor
                 try
                 {
@@ -114,12 +130,53 @@ namespace Engine.Controllers
                         rms[i].AddNeighborRoom(door, rms[neighIndex]);
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Debug.LogError(e.Message);
-                    throw new Exception("Room door#: " + (int)door + ", HasNeighborTo: " + rms[i].HasNeighborTo(door) + ", "+ Room.GetOppDoor(door) +" new Room: " + rms[neighIndex].HasNeighborTo(Room.GetOppDoor(door)));
+                    throw new Exception("Room door#: " + (int)door + ", HasNeighborTo: " + rms[i].HasNeighborTo(door) + ", " +
+                                        Room.GetOppDoor(door) + " new Room: " + rms[neighIndex].HasNeighborTo(Room.GetOppDoor(door)));
                 }
             }
+        }
+
+        private void SetRoomPositions(Room[] rms)
+        {
+            Vector2 lastPos = Vector2.zero;
+            //float minRange = GameManger.NEIGHBOR_MIN_DISTANCE;
+            float range = GameManger.NEIGHBOR_MAX_DISTANCE;
+
+            for (int i = 1; i < rms.Length; i++)
+            {
+                Vector2 newPos = Vector2.zero;
+                int infCheck = 0;
+                while (isOverlap(newPos, rms[i].Id) || newPos.x <= 0 || newPos.y <= 0 || newPos.y > 10 || newPos.x > 15)
+                {
+                    newPos = new Vector2(Random.Range(-range, range + 1), Random.Range(-range, range + 1));
+                    newPos += lastPos;
+
+                    infCheck++;
+                    if (infCheck > 5000)
+                        throw new Exception("Never Ending Loop Detected");
+                }
+                
+                rms[i].SetPosition(newPos);
+                lastPos = rms[i].Position;
+            }
+        }
+        private bool isOverlap(Vector2 newPos, int id = -1)
+        {
+            if (id >= 0)
+            {
+                for (int i = 0; i < id; i++)
+                {
+                    if (Vector2.Distance(newPos, Rooms[i].Position) < GameManger.NEIGHBOR_MIN_DISTANCE)
+                        return true;
+                }
+
+                return false;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -140,7 +197,6 @@ namespace Engine.Controllers
 
                 if (room == null)
                 {
-                    Debug.Log("First Room");
                     room = new Room(0, Vector2.zero, null, Room.Door.Left);
                     rms.Add(room);
                 }
@@ -184,7 +240,7 @@ namespace Engine.Controllers
 
             var rmGO = Instantiate(roomParent, this.transform);
             rmGO.name = "Room: " + rm.Id;
-            roomsGO.Add(rm.Id,rmGO);
+            roomsGO.Add(rm.Id, rmGO);
             GameObject[,] tileGOs = new GameObject[rm.Layout.Length, rm.Layout.Length];
 
             foreach (var tile in rm.Layout)
@@ -196,7 +252,15 @@ namespace Engine.Controllers
 
             TileController.RenderRoom(rm.Layout, tileGOs);
         }
-        
-        
+
+
+        public void RegistarOnRoomsCreaded(Action<Room> callback)
+        {
+            onRoomsCreatedCallback += callback;
+        }
+        public void RegistarOnRoomsChanged(Action<Room,Room> callback)
+        {
+            onRoomsChangedCallback += callback;
+        }
     }
 }
