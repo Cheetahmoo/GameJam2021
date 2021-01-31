@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &954656788122240607
+--- !u!1 &5269229668346100183
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 954656788122240606}
-  - component: {fileID: 954656788122240605}
-  m_Layer: 5
+  - component: {fileID: 2008994226046943181}
+  - component: {fileID: 8519864884732073385}
+  m_Layer: 0
   m_Name: MapContoller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &954656788122240606
-RectTransform:
+--- !u!4 &2008994226046943181
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 954656788122240607}
+  m_GameObject: {fileID: 5269229668346100183}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,29 +31,26 @@ RectTransform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 735.46155, y: 348.27722}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &954656788122240605
+--- !u!114 &8519864884732073385
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 954656788122240607}
+  m_GameObject: {fileID: 5269229668346100183}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bb69086d749778247b913c502adb7806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapPointPref: {fileID: 5795971639877118978, guid: f3db5eb0172d9ce4ea1eeb30da81ba35,
+  mapPointPref: {fileID: 8663528628915119792, guid: f3db5eb0172d9ce4ea1eeb30da81ba35,
     type: 3}
-  mapPref: {fileID: 559293338972303154, guid: dcdeed4cfe964774481ced74baa046a3, type: 3}
+  mapPref: {fileID: 5052267198044091221, guid: b57b8fa4dbfa6bd4b998d57e1eeda464, type: 3}
   LinePref: {fileID: 1575136861217475391, guid: beb1ed5ad7bb465499874e60adaba1df,
     type: 3}
-  Offset: {x: -300, y: -150}
-  posMul: 30
-  lineOffest: {x: 488, y: 270}
+  Offset: {x: 1, y: 1}
+  posMul: 1
+  lineOffest: {x: 0, y: 0}
+  Current: {r: 0.8392157, g: 0.3215687, b: 0.35931197, a: 1}
+  other: {r: 0.3615567, g: 0.40392157, b: 0.0235294, a: 1}
   Map: {fileID: 0}

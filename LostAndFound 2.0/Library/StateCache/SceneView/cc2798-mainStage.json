@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 ﻿{"cameraMode":{"drawMode":0,"name":"Shaded","section":"Shading Mode"},"sceneLighting":true,"audioPlay":false,"sceneViewState":{"showFog":true,"showMaterialUpdate":false,"showSkybox":true,"showFlares":true,"showImageEffects":true,"showParticleSystems":true},"in2DMode":true,"pivot":{"x":11.76779842376709,"y":5.560964584350586,"z":-83.2578125},"rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},"size":11.042452812194825,"orthographic":true}
+=======
+﻿{"cameraMode":{"drawMode":0,"name":"Shaded","section":"Shading Mode"},"sceneLighting":true,"audioPlay":false,"sceneViewState":{"showFog":true,"showMaterialUpdate":false,"showSkybox":true,"showFlares":true,"showImageEffects":true,"showParticleSystems":true},"in2DMode":true,"pivot":{"x":5.659514904022217,"y":4.9036431312561039,"z":-67.4976577758789},"rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},"size":2.6848621368408205,"orthographic":true}
+>>>>>>> Art
