@@ -18,6 +18,9 @@ public class MapController : MonoBehaviour
     public float posMul;
 
     public Vector2 lineOffest;
+
+    public Color Current;
+    public Color other;
     
     public GameObject Map;
     private Dictionary<int, GameObject> mapPoints;
@@ -73,8 +76,8 @@ public class MapController : MonoBehaviour
                 }
             }
         }
-        
-        mapPoints[startRM.Id].GetComponent<Image>().color = Color.red;
+
+        mapPoints[startRM.Id].GetComponent<SpriteRenderer>().color = Current;
         Debug.Log("Map Done");
         if(Map.transform.GetChild(1).name == "NoMap")
             Destroy(Map.transform.GetChild(1).gameObject);
@@ -87,11 +90,8 @@ public class MapController : MonoBehaviour
             var go = Instantiate(LinePref, Map.transform);
             var lr = go.GetComponent<LineRenderer>();
 
-            var pos = Camera.main.ScreenToWorldPoint((crm.Position * posMul) + Offset + lineOffest);
-            var pos2 = Camera.main.ScreenToWorldPoint((rm.Position * posMul) + Offset + lineOffest);
-
-            pos.z = 0;
-            pos2.z = 0;
+            var pos = (crm.Position * posMul) + Offset + lineOffest;
+            var pos2 = (rm.Position * posMul) + Offset + lineOffest;
             
             lr.SetPosition(0, pos);
             lr.SetPosition(1, pos2);
@@ -107,12 +107,10 @@ public class MapController : MonoBehaviour
         var go = Instantiate(mapPointPref, Map.transform);
         var pos = rm.Position * posMul;
 
-        var i = go.GetComponent<Image>();
-        var color = new Color(1, Random.Range(100, 150), Random.Range(50, 100));
-        i.color = color;
-        i.GraphicUpdateComplete();
-
-        go.transform.localPosition = pos + Offset;
+        var i = go.GetComponent<SpriteRenderer>();
+        i.color = other;
+        
+        go.transform.position = pos + Offset;
         go.name = "Room: " + rm.Id;
         mapPoints.Add(rm.Id, go);
     }
@@ -134,8 +132,8 @@ public class MapController : MonoBehaviour
     {
         if (mapPoints.ContainsKey(pre.Id))
         {
-            mapPoints[pre.Id].GetComponent<Image>().color = Color.white;
-            mapPoints[Nrm.Id].GetComponent<Image>().color = Color.red;
+            mapPoints[pre.Id].GetComponent<SpriteRenderer>().color = other;
+            mapPoints[Nrm.Id].GetComponent<SpriteRenderer>().color = Current;
         }
     }
 }
