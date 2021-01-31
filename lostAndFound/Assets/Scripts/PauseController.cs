@@ -11,6 +11,7 @@ public class PauseController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if (SceneManager.GetActiveScene().buildIndex == 0) return;
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (GameIsPaused)
@@ -40,8 +41,7 @@ public class PauseController : MonoBehaviour
 
     public void LoadMenu()
     {
-        Time.timeScale = 1f;
-        GameIsPaused = false;
+        Resume();
         SceneManager.LoadScene("Menu");//Menu
     }
 
