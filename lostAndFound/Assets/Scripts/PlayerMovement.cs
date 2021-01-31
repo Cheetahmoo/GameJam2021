@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         GetInput();
         Move();
@@ -35,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
     void Move()
     {
         //rb.AddForce(playerInput * Time.deltaTime);
-        rb.velocity = playerInput;
+        rb.velocity = playerInput * Time.deltaTime;
     }
 
     void GetInput()
