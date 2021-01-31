@@ -167,5 +167,6 @@ public class Gun : MonoBehaviour
         shotsLeft = gun.numShots;
         sr.sprite = sprite;
         sr.gameObject.transform.localPosition = gun.GetComponentInChildren<SpriteRenderer>().gameObject.transform.localPosition;
+        sound.clip = gun.sound.clip;
     }
 }

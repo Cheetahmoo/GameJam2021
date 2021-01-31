@@ -9,15 +9,21 @@ public class Health : MonoBehaviour
     public bool damagedReturn;
     public bool isPlayer;
     public EnemySpawner es;
+    public float invincibilityTime;
+    float invincibilityTimer;
     // Start is called before the first frame update
     void Start()
     {
-
+        invincibilityTimer = invincibilityTime;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (invincibilityTimer > 0)
+        {
+            invincibilityTimer -= invincibilityTime;
+        }
         if (hasInitialized && health <= 0)
         {
             Kill();
@@ -34,7 +40,10 @@ public class Health : MonoBehaviour
     {
         if (canHurtPlayer == isPlayer)
         {
-            health -= d;
+            if (invincibilityTimer <= 0)
+            {
+                health -= d;
+            }
             if (!isPlayer)
             {
                 EnemyMovement em = GetComponent<EnemyMovement>();
