@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using Debug = UnityEngine.Debug;
+using Random = UnityEngine.Random;
 
 namespace Engine.DataTypes
 {
     public class Room
     {
         // -------Mapping data-------
-        public enum Door { Up, Down, Left, Right }
+        public enum Door { Up, Down, Left, Right}
 
         //Location of the room
         public Vector2 Position { get; private set; }
@@ -19,7 +23,7 @@ namespace Engine.DataTypes
 
         // -------Looks, Layout, enemies-------
 
-        public Tile[][] Layout { get; private set; }
+        public Tile[,] Layout { get; private set; }
 
         public List<Enemy> Enemies { get; private set; }
 
@@ -33,15 +37,62 @@ namespace Engine.DataTypes
         private Action<Room> onPlayerEnterCallback;
         private Action<Room> onPlayerExitCallback;
 
-        public void Activate()
+        public void Activate(int w, int h)
         {
             //Make sure the room is not already activated
             if (activated)
                 throw new InvalidOperationException("Can't Active: Room has Already been Activated");
+
+            PopulateLayout(w, h);
             
+            
+            onActivateCallBack?.Invoke(this);
             activated = true;
         }
-        
+        private void PopulateLayout(int w, int h)
+        {
+            Layout = new Tile[w, h];
+
+            for (int x = 0; x < w; x++)
+            {
+                for (int y = 0; y < h; y++)
+                {
+                    if (((x == 0 || x == w - 1) && y != 0 )|| y == 1 || y == h - 1)
+                        Layout[x, y] = new Tile(TileType.WallTop, x, y);
+                    
+                    else if (x == w - 1 || y == 0 || y == h - 2)
+                        Layout[x, y] = new Tile(TileType.WallSide, x, y);
+                    
+                    else
+                        Layout[x, y] = new Tile(TileType.Floor, x, y);
+                }
+            }
+
+            for (int i = 0; i < neighbors.Length; i++)
+            {
+                if (HasNeighborTo((Door)i))
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            Layout[w / 2, h - 2] =
+                                new Tile(TileType.Door, w / 2, h - 2);
+                            break;
+                        case 1:
+                            Layout[w / 2, 0] = new Tile(TileType.Door, w / 2, 0);
+                            break;
+                        case 2:
+                            Layout[0, h / 2] = new Tile(TileType.Door, 0, h/2);
+                            break;
+                        case 3:
+                            Layout[w - 1, h / 2] = new Tile(TileType.Door, w-1, h/2);
+                            break;
+
+                    }
+                }
+            }
+        }
+
         //This is all of the mapping construction of a room.
         #region Construction
         /// <param name="id">ID of new room</param>
@@ -50,6 +101,9 @@ namespace Engine.DataTypes
         /// <param name="door">What door is being used to get to this room</param>
         public Room(int id, Vector2 pos, Room parent, Door door, bool isEnd = false)
         {
+            if(parent == null)
+                Debug.LogWarning("Parent is Null");
+
             this.IsEnd = isEnd;
 
             Id = id;
@@ -64,27 +118,25 @@ namespace Engine.DataTypes
         /// Get opposite door so that if the player uses the right door to enter this room
         /// that means the the left door is used to get back to the parent room
         ///</summary>
-        private static Door GetOppDoor(Door door)
+        public static Door GetOppDoor(Door door)
         {
-            Door oppDoor = door;
-            if (door == Door.Right)
-            {
-                oppDoor = Door.Left;
-            }
-            else if (door == Door.Left)
-            {
-                oppDoor = Door.Right;
-            }
-            else if (door == Door.Up)
-            {
-                oppDoor = Door.Down;
-            }
+            if (door == Door.Up)
+                return Door.Down;
             else if (door == Door.Down)
-            {
-                oppDoor = Door.Up;
-            }
+                return Door.Up;
 
-            return oppDoor;
+            else if (door == Door.Right)
+                return Door.Left;
+            else
+                return Door.Right;
+        }
+
+        /// <summary>
+        /// Checks too see if a neighbor is already using a Door
+        /// </summary>
+        public bool HasNeighborTo(Door door)
+        {
+            return neighbors[(int)door] != null;
         }
 
         /// <summary>
@@ -93,14 +145,16 @@ namespace Engine.DataTypes
         /// <param name="id">Id for new room</param>
         /// <param name="pos">Position of new room</param>
         /// <param name="door">Door used to get to new room</param>
-        public void CreateNeighborRoom(int id, Vector2 pos, Door door)
+        public Room CreateNeighborRoom(int id, Vector2 pos, Door door, bool end = false)
         {
-            if (activated == false)
+            if (activated == false && neighbors[(int)door] == null)
             {
-                neighbors[(int)door] = new Room(id, pos, this, door);
+                neighbors[(int)door] = new Room(id, pos, this, door, end);
             }
             else
                 throw new InvalidOperationException("Can't Add Room: This room has Already been Accessed by the player.");
+
+            return neighbors[(int)door];
         }
         
         /// <summary>
@@ -111,7 +165,7 @@ namespace Engine.DataTypes
         {
             if (activated == false)
             {
-                rm.ConnectToExisting(dr, rm);
+                ConnectToExisting(dr, rm);
                 
             }
             else
@@ -128,14 +182,14 @@ namespace Engine.DataTypes
             Door oppDoor = GetOppDoor(dr);
             
             //Maker sure the Door is not in use already
-            if (rm.neighbors[(int)oppDoor] != null)
+            if (rm.HasNeighborTo(oppDoor))
             {
-                throw new InvalidOperationException("Can't Connect Room: The Room(" + rm.Id + ") is already using this Door");
+                throw new InvalidOperationException("Can't Connect Room: The Room(" + rm.Id + ") is already using this Door-> " + oppDoor);
             }
 
             if (neighbors[(int)dr] != null)
             {
-                throw new InvalidOperationException("Can't Connect Room: This Room(" + rm.Id + ") is already using this Door");
+                throw new InvalidOperationException("Can't Connect Room: This Room (" + Id + ") is already using this Door-> " + dr);
             }
 
             rm.neighbors[(int)oppDoor] = this;
@@ -143,7 +197,7 @@ namespace Engine.DataTypes
         }
 
         /// <summary>
-        /// Gets all Connections that this room as.
+        /// Gets all Connections that this room has.
         /// </summary>
         /// <returns>Array of Doors</returns>
         public Door[] GetDoorConnections()
@@ -158,6 +212,11 @@ namespace Engine.DataTypes
             }
 
             return connections.ToArray();
+        }
+
+        public Room GetNeighbor(Door dr)
+        {
+            return neighbors[(int)dr];
         }
         #endregion
 
@@ -183,7 +242,11 @@ namespace Engine.DataTypes
         
 
         #endregion
-        
-        
+
+
+        public bool IsActived()
+        {
+            return activated;
+        }
     }
 }

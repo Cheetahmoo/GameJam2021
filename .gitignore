@@ -8,3 +8,7 @@ lostAndFound/Assembly-CSharp.csproj
 lostAndFound/obj/
 
 lostAndFound/lostAndFound.sln
+
+lostAndFound/Temp/
+
+lostAndFound/.vs/
