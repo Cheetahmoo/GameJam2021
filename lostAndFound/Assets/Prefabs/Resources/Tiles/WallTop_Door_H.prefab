@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2245107330579288631}
   - component: {fileID: 4039730905485018586}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: door_V
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 5029621903092248291}
   - component: {fileID: -3076863895337444077}
   - component: {fileID: 5265681644933410752}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: WallTop_Door_H
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -153,8 +153,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 752136863
+  m_SortingLayer: 3
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 5e80f6c6ebed98b44b3a03b5a0d796d5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
