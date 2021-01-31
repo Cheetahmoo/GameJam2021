@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+﻿fileFormatVersion: 2
+guid: 966cd09147654f3299a4dab7b8db66e0
+timeCreated: 1612036404
+=======
 fileFormatVersion: 2
 guid: 966cd09147654f3299a4dab7b8db66e0
 MonoImporter:
@@ -9,3 +14,4 @@ MonoImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+>>>>>>> 1f2a14a... Merge branch 'main' of https://github.com/Cheetahmoo/GameJam2021 into main
