@@ -15,10 +15,7 @@ public class GunMovement : MonoBehaviour
     void Update()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (GetComponent<Gun>().playerControlled)
-        {
-            TurnToFace(mousePos, rotationOffset);
-        }
+        TurnToFace(mousePos, rotationOffset);
     }
 
     void TurnToFace(Vector3 target, float offset = 0)
