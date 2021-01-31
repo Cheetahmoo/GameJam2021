@@ -10,7 +10,9 @@ public class Health : MonoBehaviour
     public bool isPlayer;
     public EnemySpawner es;
     public float invincibilityTime;
-    float invincibilityTimer;
+    public float invincibilityTimer;
+    public AudioClip[] hurtSounds;
+    public AudioSource audioPlayer;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,7 +24,7 @@ public class Health : MonoBehaviour
     {
         if (invincibilityTimer > 0)
         {
-            invincibilityTimer -= invincibilityTime;
+            invincibilityTimer -= Time.deltaTime;
         }
         if (hasInitialized && health <= 0)
         {
@@ -42,6 +44,16 @@ public class Health : MonoBehaviour
         {
             if (invincibilityTimer <= 0)
             {
+                if(hurtSounds.Length > 0 && audioPlayer)
+                {
+                    audioPlayer.clip = hurtSounds[Random.Range(0, hurtSounds.Length)];
+                    audioPlayer.Play();
+                }
+                if (isPlayer)
+                {
+                    invincibilityTimer = invincibilityTime;
+                    Debug.Log("Player Hit");
+                }
                 health -= d;
             }
             if (!isPlayer)

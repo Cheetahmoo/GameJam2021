@@ -444,3 +444,21 @@ MonoBehaviour:
   hasInitialized: 1
   damagedReturn: 1
   isPlayer: 0
+  es: {fileID: 0}
+  invincibilityTime: 0
+  invincibilityTimer: 0
+  hurtSounds:
+  - {fileID: 8300000, guid: 04701384ac4eefa4fb8c0594c6ad87f1, type: 3}
+  - {fileID: 8300000, guid: 8e49df61fcd9e1d4dbe11949688cc7f7, type: 3}
+  - {fileID: 8300000, guid: 21990859615395c45b06f8040f17c00e, type: 3}
+  - {fileID: 8300000, guid: 0887d0f8c90869441b315d5ae4e02462, type: 3}
+  - {fileID: 8300000, guid: c04b95f9905812944b53c31fcbc6db6d, type: 3}
+  - {fileID: 8300000, guid: efe1d4a590a825d42b51040b2dd5c9cc, type: 3}
+  - {fileID: 8300000, guid: 7e6025c948714634080de9b038210d0c, type: 3}
+  - {fileID: 8300000, guid: 46ef2b0fba387f34096dea5347823e7a, type: 3}
+  - {fileID: 8300000, guid: 7dfb21c221b30d7438cd78ba9609d7b7, type: 3}
+  - {fileID: 8300000, guid: 6a4f8c48ff23cab4fb1c5dec5d3f6ea5, type: 3}
+  - {fileID: 8300000, guid: 10f861337c6ee7042abbbfd6790a0481, type: 3}
+  - {fileID: 8300000, guid: 61392a4294f06fc41ab49350c08db95f, type: 3}
+  - {fileID: 8300000, guid: cfbbb5e97b5cb5d4a84983f1122281f8, type: 3}
+  audioPlayer: {fileID: 0}
