@@ -74,8 +74,10 @@
     <Compile Include="Assets\Music&amp;Sound\Volume.cs" />
     <Compile Include="Assets\Scripts\BulletMovement.cs" />
     <Compile Include="Assets\Scripts\EnemyMovement.cs" />
+    <Compile Include="Assets\Scripts\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Gun.cs" />
     <Compile Include="Assets\Scripts\GunItem.cs" />
+    <Compile Include="Assets\Scripts\GunItemSpawner.cs" />
     <Compile Include="Assets\Scripts\GunManager.cs" />
     <Compile Include="Assets\Scripts\GunMovement.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />

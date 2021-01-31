@@ -9,14 +9,29 @@ public class BulletMovement : MonoBehaviour
     public int damage;
     public bool canHurtPlayer;
     public float maxLifetime;
+    public Color playerBullets;
+    public Color enemyBullets;
     float timeAlive;
+    SpriteRenderer sr;
     // Start is called before the first frame update
     void Start()
     {
+        sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         if(maxLifetime == 0)
         {
             maxLifetime = 10;
+        }
+        if (sr)
+        {
+            if (canHurtPlayer)
+            {
+                sr.color = enemyBullets;
+            }
+            else
+            {
+                sr.color = playerBullets;
+            }
         }
     }
 

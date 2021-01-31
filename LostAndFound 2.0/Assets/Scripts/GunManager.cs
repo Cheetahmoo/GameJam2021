@@ -19,8 +19,10 @@ public class GunManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //look for scroll wheel
         if(Input.mouseScrollDelta.y != 0 && !primary.GetComponent<Gun>().isReloading && !secondary.GetComponent<Gun>().isReloading)
         {
+            //swap active gun
             currGun = !currGun;
             if (currGun)
             {
@@ -32,6 +34,26 @@ public class GunManager : MonoBehaviour
                 secondary.SetActive(false);
                 primary.SetActive(true);
             }
+        }
+
+        //check for gun pickup
+        if (Input.GetKeyDown(KeyCode.E) && gi)
+        {
+            Gun targetGun;
+            if (!currGun)
+            {
+                targetGun = primary.GetComponent<Gun>();
+            }
+            else
+            {
+                targetGun = secondary.GetComponent<Gun>();
+            }
+
+            if (targetGun)
+            {
+                targetGun.Become(gi.gun, gi.gunImage);
+            }
+            Destroy(gi.gameObject);
         }
     }
 }

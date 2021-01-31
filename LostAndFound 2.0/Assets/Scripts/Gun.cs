@@ -22,9 +22,12 @@ public class Gun : MonoBehaviour
     public float reloadBarMaxSize;
     SpriteRenderer reloadSprite;
     public bool isReloading;
+    SpriteRenderer sr;
+    public AudioSource sound;
     // Start is called before the first frame update
     void Start()
     {
+        sr = GetComponentInChildren<SpriteRenderer>();
         isReloading = false;
         if (!playerControlled)
         {
@@ -99,6 +102,11 @@ public class Gun : MonoBehaviour
         mechFire = false;
         shotsLeft--;
         float dTheta = 0;
+        if (sound)
+        {
+            sound.Play();
+        }
+        
         if (numBullets > 1)
         {
             dTheta = spreadAngle / (numBullets - 1);
@@ -144,5 +152,20 @@ public class Gun : MonoBehaviour
             reloadBar.transform.localScale = scale;
         }
 
+    }
+
+    public void Become(Gun gun, Sprite sprite)
+    {
+        damage = gun.damage;
+        bulletSpeed = gun.bulletSpeed;
+        numBullets = gun.numBullets;
+        spreadAngle = gun.spreadAngle;
+        numShots = gun.numShots;
+        reloadTime = gun.reloadTime;
+        firePoint.transform.localPosition = gun.firePoint.transform.localPosition;
+        coolDownTime = gun.coolDownTime;
+        shotsLeft = gun.numShots;
+        sr.sprite = sprite;
+        sr.gameObject.transform.localPosition = gun.GetComponentInChildren<SpriteRenderer>().gameObject.transform.localPosition;
     }
 }

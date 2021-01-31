@@ -18,13 +18,13 @@ public class GunMovement : MonoBehaviour
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (sr)
         {
-            if (mousePos.x < transform.position.x)
+            if (transform.rotation.eulerAngles.z < 90 || transform.rotation.eulerAngles.z >= 270)
             {
-                sr.flipY = true;
+                sr.flipY = false;
             }
             else
             {
-                sr.flipY = false;
+                sr.flipY = true;
             }
         }
         if (GetComponent<Gun>().playerControlled)

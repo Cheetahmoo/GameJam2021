@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: -1582516461
   m_SortingLayer: 2
   m_SortingOrder: 5
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: a746c0dcaf6299247a846a003668bcf9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -137,3 +137,5 @@ MonoBehaviour:
   damage: 0
   canHurtPlayer: 0
   maxLifetime: 0
+  playerBullets: {r: 0.2776838, g: 0.0093449615, b: 0.3962264, a: 1}
+  enemyBullets: {r: 0, g: 0.22040442, b: 0.78431374, a: 1}

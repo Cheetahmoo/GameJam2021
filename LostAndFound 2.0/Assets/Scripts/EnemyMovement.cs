@@ -7,16 +7,18 @@ public class EnemyMovement : MonoBehaviour
     public float viewRadius;
     public GameObject player;
     public float rayOffset;
-    bool distCheck;
-    bool sightCheck;
-    bool playerActive;
+    public bool distCheck;
+    public bool sightCheck;
+    public bool playerActive;
     Rigidbody2D rb;
     public float moveSpeed;
     public float minDist;
     Gun gun;
+    public SpriteRenderer sr;
     // Start is called before the first frame update
     void Start()
     {
+        sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         GetPlayer();
         distCheck = false;
@@ -90,7 +92,11 @@ public class EnemyMovement : MonoBehaviour
         RaycastHit2D hit;
         hit = Physics2D.Raycast(transform.position + aimDir, target - (transform.position + aimDir));
         //Debug.DrawLine(transform.position + aimDir, target, Color.green);
-
+        Debug.Log(hit.collider);
+        if (!hit.collider)
+        {
+            return false;
+        }
         if (hit.collider.gameObject.tag == "Player")
         {
             return true;
@@ -110,7 +116,19 @@ public class EnemyMovement : MonoBehaviour
         {
             rb.velocity /= 5;
         }
-        TurnToFace(player.transform.position);
+        gun.transform.rotation = TurnToFace(player.transform.position);
+
+        if (sr)
+        {
+            if (player.transform.position.x > transform.position.x)
+            {
+                sr.flipX = false;
+            }
+            else
+            {
+                sr.flipX = true;
+            }
+        }
     }
 
     void Shoot()
@@ -122,12 +140,12 @@ public class EnemyMovement : MonoBehaviour
 
     }
 
-    void TurnToFace(Vector3 target, float offset = 0)
+    Quaternion TurnToFace(Vector3 target, float offset = 0)
     {
         Vector3 aimDir = target - transform.position;
         float theta = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
         Quaternion targetRotation = Quaternion.AngleAxis(theta + offset, Vector3.forward);
-        transform.rotation = targetRotation;
+        return targetRotation;
     }
 
     public void PlayerActivate()

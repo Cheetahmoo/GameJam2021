@@ -8,6 +8,7 @@ public class Health : MonoBehaviour
     public bool hasInitialized = false;
     public bool damagedReturn;
     public bool isPlayer;
+    public EnemySpawner es;
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +51,14 @@ public class Health : MonoBehaviour
 
     public void Kill()
     {
-        Destroy(this.gameObject);
+        if (isPlayer)
+        {
+
+        }
+        else
+        {
+            es.Kill(this.gameObject);
+        }
+        //Destroy(this.gameObject);
     }
 }
