@@ -75,7 +75,6 @@ namespace Engine.Controllers
             //Debug.Log("Current Room has Changed to: " + CurrentRoom.Id);
             if (lrm != null)
             {
-                Debug.Log("Current Room has Changed to: " + nrm.Id + ", Last room was: " + lrm.Id);
                 roomsGO[lrm.Id].SetActive(false);
             }
 
@@ -177,7 +176,7 @@ namespace Engine.Controllers
         {
             if (!rm.IsActived())
             {
-                rm.Activate(GameManger.ROOM_SIZE);
+                rm.Activate(GameManger.ROOM_SIZE_WIDTH, GameManger.ROOM_SIZE_HEIGHT);
             }
 
             if (roomsGO.ContainsKey(rm.Id))
@@ -186,12 +185,16 @@ namespace Engine.Controllers
             var rmGO = Instantiate(roomParent, this.transform);
             rmGO.name = "Room: " + rm.Id;
             roomsGO.Add(rm.Id,rmGO);
+            GameObject[,] tileGOs = new GameObject[rm.Layout.Length, rm.Layout.Length];
 
             foreach (var tile in rm.Layout)
             {
                 var tGo = Instantiate(tilePrefs[(int)tile.Type], rmGO.transform);
                 tGo.transform.position = new Vector2(tile.x, tile.y);
+                tileGOs[tile.x, tile.y] = tGo;
             }
+
+            TileController.RenderRoom(rm.Layout, tileGOs);
         }
         
         

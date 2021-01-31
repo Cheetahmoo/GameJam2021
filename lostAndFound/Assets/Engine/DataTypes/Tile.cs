@@ -2,7 +2,8 @@
 {
     public enum TileType
     {
-        RoomBoarder,
+        WallTop,
+        WallSide,
         Door,
         Floor
     }

@@ -37,28 +37,32 @@ namespace Engine.DataTypes
         private Action<Room> onPlayerEnterCallback;
         private Action<Room> onPlayerExitCallback;
 
-        public void Activate(int size)
+        public void Activate(int w, int h)
         {
             //Make sure the room is not already activated
             if (activated)
                 throw new InvalidOperationException("Can't Active: Room has Already been Activated");
 
-            PopulateLayout(size);
+            PopulateLayout(w, h);
             
             
             onActivateCallBack?.Invoke(this);
             activated = true;
         }
-        private void PopulateLayout(int size)
+        private void PopulateLayout(int w, int h)
         {
-            Layout = new Tile[size, size];
+            Layout = new Tile[w, h];
 
-            for (int x = 0; x < size; x++)
+            for (int x = 0; x < w; x++)
             {
-                for (int y = 0; y < size; y++)
+                for (int y = 0; y < h; y++)
                 {
-                    if (x == 0 || x == size - 1 || y == 0 || y == size - 1)
-                        Layout[x, y] = new Tile(TileType.RoomBoarder, x, y);
+                    if (((x == 0 || x == w - 1) && y != 0 )|| y == 1 || y == h - 1)
+                        Layout[x, y] = new Tile(TileType.WallTop, x, y);
+                    
+                    else if (x == w - 1 || y == 0 || y == h - 2)
+                        Layout[x, y] = new Tile(TileType.WallSide, x, y);
+                    
                     else
                         Layout[x, y] = new Tile(TileType.Floor, x, y);
                 }
@@ -71,18 +75,17 @@ namespace Engine.DataTypes
                     switch (i)
                     {
                         case 0:
-                            Layout[0, size / 2] = new Tile(TileType.Door, 0, size / 2);
+                            Layout[w / 2, h - 2] =
+                                new Tile(TileType.Door, w / 2, h - 2);
+                            break;
+                        case 1:
+                            Layout[w / 2, 0] = new Tile(TileType.Door, w / 2, 0);
                             break;
                         case 2:
-                            Layout[size-1, size / 2] =
-                                new Tile(TileType.Door, size-1, size / 2);
+                            Layout[0, h / 2] = new Tile(TileType.Door, 0, h/2);
                             break;
                         case 3:
-                            Layout[size / 2, 0] = new Tile(TileType.Door, size / 2, 0);
-                            break;
-                        case 4:
-                            Layout[size / 2, size-1] =
-                                new Tile(TileType.Door, size / 2, size-1);
+                            Layout[w - 1, h / 2] = new Tile(TileType.Door, w-1, h/2);
                             break;
 
                     }
