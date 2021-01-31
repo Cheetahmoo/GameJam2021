@@ -36,8 +36,8 @@ namespace Engine.Controllers
             roomsGO = new Dictionary<int, GameObject>();
             Rooms = CreateRooms(GameManger.NumRooms);
 
-            CurrentRoom = Rooms[0];
-            DisplayRoom(CurrentRoom);
+            _crrRoom = Rooms[0];
+            //DisplayRoom(CurrentRoom);
         }
 
 
@@ -71,9 +71,9 @@ namespace Engine.Controllers
         /// <param name="lrm">Last Room</param>
         private void CurrentRoomChanged(Room lrm, Room nrm)
         {
-            
+
             //Debug.Log("Current Room has Changed to: " + CurrentRoom.Id);
-            if (lrm != null)
+            if (lrm != null && roomsGO.ContainsKey(lrm.Id)) 
             {
                 roomsGO[lrm.Id].SetActive(false);
             }
