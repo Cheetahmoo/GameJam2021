@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Engine.Controllers
 {
-    public class TileController: MonoBehaviour
+    public class TileController : MonoBehaviour
     {
         private static TileController instance;
 
@@ -12,8 +12,9 @@ namespace Engine.Controllers
 
         public string WallName;
 
-        private void Start()
+        void Start()
         {
+            Debug.Log("Start");
             if (instance != null)
                 throw new Exception("There should only be 1 TileController, Please Remove one");
 
@@ -78,6 +79,9 @@ namespace Engine.Controllers
 
         private static string GetConnectedName(Tile t, Tile[,] rmLayout)
         {
+            if (instance == null)
+                Debug.Log("NULL");
+
             string wallName = instance.WallName + "_";
 
             if (t.x + 1 < rmLayout.GetLength(0) && t.Type == rmLayout[t.x + 1, t.y].Type)
