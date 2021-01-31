@@ -51,4 +51,9 @@ MonoBehaviour:
   mapPointPref: {fileID: 5795971639877118978, guid: f3db5eb0172d9ce4ea1eeb30da81ba35,
     type: 3}
   mapPref: {fileID: 559293338972303154, guid: dcdeed4cfe964774481ced74baa046a3, type: 3}
+  LinePref: {fileID: 1575136861217475391, guid: beb1ed5ad7bb465499874e60adaba1df,
+    type: 3}
+  Offset: {x: -300, y: -150}
+  posMul: 30
+  lineOffest: {x: 488, y: 270}
   Map: {fileID: 0}

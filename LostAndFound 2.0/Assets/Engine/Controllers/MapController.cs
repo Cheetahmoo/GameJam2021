@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Engine;
 using Engine.Controllers;
 using Engine.DataTypes;
@@ -77,7 +75,7 @@ public class MapController : MonoBehaviour
         }
         
         mapPoints[startRM.Id].GetComponent<Image>().color = Color.red;
-        
+        Debug.Log("Map Done");
         if(Map.transform.GetChild(1).name == "NoMap")
             Destroy(Map.transform.GetChild(1).gameObject);
     }
@@ -104,6 +102,8 @@ public class MapController : MonoBehaviour
 
     private void CreateMapPoint(Room rm)
     {
+
+        Debug.Log("Creating Point");
         var go = Instantiate(mapPointPref, Map.transform);
         var pos = rm.Position * posMul;
 
@@ -112,8 +112,8 @@ public class MapController : MonoBehaviour
         i.color = color;
         i.GraphicUpdateComplete();
 
-        go.transform.localPosition = pos+Offset;
-        go.name = "Room: "+ rm.Id;
+        go.transform.localPosition = pos + Offset;
+        go.name = "Room: " + rm.Id;
         mapPoints.Add(rm.Id, go);
     }
 
