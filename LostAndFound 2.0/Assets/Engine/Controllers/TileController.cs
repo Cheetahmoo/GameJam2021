@@ -14,7 +14,6 @@ namespace Engine.Controllers
 
         void Start()
         {
-            Debug.Log("Start");
             if (instance != null)
                 throw new Exception("There should only be 1 TileController, Please Remove one");
 

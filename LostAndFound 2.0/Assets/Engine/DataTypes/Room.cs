@@ -101,9 +101,6 @@ namespace Engine.DataTypes
         /// <param name="door">What door is being used to get to this room</param>
         public Room(int id, Vector2 pos, Room parent, Door door, bool isEnd = false)
         {
-            if (parent == null)
-                Debug.LogWarning("Parent is Null");
-
             this.IsEnd = isEnd;
 
             Id = id;
@@ -247,6 +244,10 @@ namespace Engine.DataTypes
         public bool IsActived()
         {
             return activated;
+        }
+        public void SetPosition(Vector2 newPos)
+        {
+            Position = newPos;
         }
     }
 }

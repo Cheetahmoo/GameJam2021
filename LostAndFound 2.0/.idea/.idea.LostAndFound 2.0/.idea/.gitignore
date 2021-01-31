@@ -1,0 +1,13 @@
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/projectSettingsUpdater.xml
+/.idea.LostAndFound 2.0.iml
+/contentModel.xml
+# Datasource local storage ignored files
+/../../../../../../../../../:\Users\cheet\Documents\GameJam2021\LostAndFound 2.0\.idea\.idea.LostAndFound 2.0\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
